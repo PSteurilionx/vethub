@@ -26,6 +26,12 @@
 - Integration tests use the `test` profile, an isolated H2 database, and Liquibase `tst` context. Tests extending `IntegrationTest` clean database state before and after each test.
 - Unit tests extend `UnitTest` and use Mockito without starting Spring or a database. Controller integration tests extend `IntegrationTest` and use `MockMvc` with the real Spring context and repositories.
 
+## Test base classes
+
+- `UnitTest` is the base class for fast, isolated unit tests. Extend it when testing a service, validator, mapper, or other class with dependencies that can be mocked. It enables Mockito through JUnit 5 and does not start Spring or connect to a database.
+- `IntegrationTest` is the base class for tests that need the application wiring, HTTP layer, repositories, or the database. Extend it for controller/API tests and persistence-backed behavior. It uses the real Spring test context and `MockMvc`, runs with the isolated H2 test database and Liquibase `tst` data, and cleans database state before and after each test.
+- Prefer `UnitTest` unless the behavior under test specifically depends on Spring configuration, request handling, repository persistence, or interactions between multiple application layers.
+
 ## API contract workflow
 
 - After changing backend controllers or DTOs, run `cd client && bun run sync:api` with the backend available; this downloads the OpenAPI document and regenerates `client/src/lib/types/api.d.ts`.
