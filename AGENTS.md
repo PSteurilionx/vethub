@@ -32,6 +32,12 @@
 - `IntegrationTest` is the base class for tests that need the application wiring, HTTP layer, repositories, or the database. Extend it for controller/API tests and persistence-backed behavior. It uses the real Spring test context and `MockMvc`, runs with the isolated H2 test database and Liquibase `tst` data, and cleans database state before and after each test.
 - Prefer `UnitTest` unless the behavior under test specifically depends on Spring configuration, request handling, repository persistence, or interactions between multiple application layers.
 
+## Application conventions
+
+- Use separate DTOs for request and response payloads. Use MapStruct mappers to convert between DTOs and domain models.
+- Store all Liquibase migrations under `server/src/main/resources/db/changelog/`.
+- The frontend uses `openapi-fetch` with auto-generated types from the backend OpenAPI contract.
+
 ## API contract workflow
 
 - After changing backend controllers or DTOs, run `cd client && bun run sync:api` with the backend available; this downloads the OpenAPI document and regenerates `client/src/lib/types/api.d.ts`.
